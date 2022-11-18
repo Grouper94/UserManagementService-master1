@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +38,18 @@ public class UserControllerImpl implements UserController{
             @ApiResponse(responseCode = "404",description = "No Users Found")
     })
 
-    public List<User> findAll() {
+    public ResponseEntity<List<User>> findAll() {
+        List <User> users;
         try {
-            return userService.getAllUsers();
+            //return userService.getAllUsers();
+            users = userService.getAllUsers();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(users,HttpStatus.OK);
     }
     @Override
     @GetMapping("/findUserById/{id}")
@@ -56,9 +61,18 @@ public class UserControllerImpl implements UserController{
             @ApiResponse(responseCode = "404", description = "User Not Found")
     })
 
-    public Optional<User> findUser(@Parameter(description = "id of User to be searched",example="1") @PathVariable Integer id) throws SQLException {
-            return userService.getUser(id);
-
+    public ResponseEntity <Optional<User>> findUser(@Parameter(description = "id of User to be searched",example="1") @PathVariable Integer id) throws SQLException {
+       Optional<User> user;
+        try {
+            user = userService.getUser(id);
+        }
+        catch (Exception e ){
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
+        if(user.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @Override
@@ -99,15 +113,15 @@ public class UserControllerImpl implements UserController{
             @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
             @ApiResponse(responseCode = "404", description = "User has Not Been  Created")
     })
-
-
-    public void addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User to add",required = true,content = @Content(schema=@Schema(implementation = User.class)))
+    public ResponseEntity<Void> addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User to add",required = true,content = @Content(schema=@Schema(implementation = User.class)))
                             @Valid User user) {
+
         try {
               userService.addUser(user);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
+        return new ResponseEntity<>( HttpStatus.OK);
     }
     @Override
     @PutMapping("/update")
@@ -119,13 +133,15 @@ public class UserControllerImpl implements UserController{
             @ApiResponse(responseCode = "404", description = "User has Not Been  uPDATED")
     })
 
-    public void updateUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Put an existing ID",required = true,content = @Content(schema=@Schema(implementation = User.class)))
+    public ResponseEntity<Void> updateUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Put an existing ID",required = true,content = @Content(schema=@Schema(implementation = User.class)))
                                @Valid User user) {
+
         try {
             userService.updateUser(user);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
+        return new ResponseEntity<>( HttpStatus.OK);
     }
     @Override
     @DeleteMapping("/{id}")
@@ -137,11 +153,16 @@ public class UserControllerImpl implements UserController{
             @ApiResponse(responseCode = "404", description = "User has Not Been  deleted")
     })
 
-    public void deleteUser(@PathVariable int id) {
+    public ResponseEntity<Optional<String>> deleteUser(@PathVariable int id) {
+        Optional <String> msg = Optional.empty();
+        String ms = "Id not Found";
         try {
             userService.deleteUser(id);
         } catch (SQLException e) {
+            msg = Optional.ofNullable(ms); ;
+            System.out.println(msg);
+            return new ResponseEntity<>(msg,HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 }

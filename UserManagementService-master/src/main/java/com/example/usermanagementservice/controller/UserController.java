@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public interface UserController {
 
-    public List<User> findAll();
-    public Optional<User> findUser(Integer id) throws SQLException;;
-    ResponseEntity<List<User>> findUserByName(String name);
-    public void addUser(User user);
+    public ResponseEntity<List<User>> findAll()throws SQLException;
+    public ResponseEntity<Optional<User>> findUser(Integer id) throws SQLException;
+   public ResponseEntity<List<User>> findUserByName(String name)throws SQLException;
+    public ResponseEntity<Void> addUser(User user)throws SQLException;
 
-    public void updateUser(User user) ;
-    public void deleteUser(int id);
+    public ResponseEntity<Void> updateUser(User user) throws SQLException;
+    public ResponseEntity<Optional<String>> deleteUser(int id)throws SQLException;
 }
