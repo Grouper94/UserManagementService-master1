@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/crud")
+@AllArgsConstructor
 public class UserControllerImpl implements UserController{
-    @Autowired
+   // @Autowired
     private UserService userService ;
 
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+   //// public void setUserService(UserService userService) {
+      //  this.userService = userService;
+    //}
 
     @Override
     @GetMapping("/findAll")
@@ -113,10 +115,10 @@ public class UserControllerImpl implements UserController{
             @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
             @ApiResponse(responseCode = "404", description = "User has Not Been  Created")
     })
-    public ResponseEntity<Void> addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User to add",required = true,content = @Content(schema=@Schema(implementation = User.class)))
-                            @Valid User user) {
-
-        try {
+   //
+    // public ResponseEntity<Void>addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User to add",required = true,content = @Content(schema=@Schema(implementation = User.class))) @Valid User user) {
+    public ResponseEntity<Void>addUser(User user) {
+       try {
               userService.addUser(user);
         } catch (SQLException e) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
@@ -133,25 +135,27 @@ public class UserControllerImpl implements UserController{
             @ApiResponse(responseCode = "404", description = "User has Not Been  uPDATED")
     })
 
-    public ResponseEntity<Void> updateUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Put an existing ID",required = true,content = @Content(schema=@Schema(implementation = User.class)))
-                               @Valid User user) {
-
+   // public ResponseEntity<Void> updateUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Put an existing ID",required = true,content = @Content(schema=@Schema(implementation = User.class)))
+                       //        @Valid User user) {
+          public ResponseEntity<Void> updateUser(User user)
+         {
         try {
             userService.updateUser(user);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
-        return new ResponseEntity<>( HttpStatus.OK);
-    }
-    @Override
-    @DeleteMapping("/{id}")
-    @Operation(tags = {"Note"},
-    summary = "Deletes a user with the specific id", parameters = {@Parameter(name = "id",description = "id of User to be deleted",example="1")})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "User has been Deleted Successfully"),
-            @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
-            @ApiResponse(responseCode = "404", description = "User has Not Been  deleted")
-    })
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        @Override
+        @DeleteMapping("/{id}")
+        @Operation(tags = {"Note"},
+                summary = "Deletes a user with the specific id", parameters = {@Parameter(name = "id", description = "id of User to be deleted", example = "1")})
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "200", description = "User has been Deleted Successfully"),
+                @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
+                @ApiResponse(responseCode = "404", description = "User has Not Been  deleted")
+        })
+
 
     public ResponseEntity<Optional<String>> deleteUser(@PathVariable int id) {
         Optional <String> msg = Optional.empty();

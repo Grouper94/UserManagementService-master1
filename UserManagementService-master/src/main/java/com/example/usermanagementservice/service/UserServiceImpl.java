@@ -2,6 +2,7 @@ package com.example.usermanagementservice.service;
 
 import com.example.usermanagementservice.repsitory.UserRepository;
 import com.example.usermanagementservice.model.User;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 class  UserServiceImpl implements UserService {
    private UserRepository userRepository ;
 
-@Autowired
-    UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+//@Autowired
+//    UserServiceImpl(UserRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
 
     @Override
     public void addUser(User user) throws SQLException {
@@ -24,6 +26,7 @@ class  UserServiceImpl implements UserService {
 
     }
 
+    @Override
     public Optional<User> getUser(Integer id) {
       return userRepository.findById(id);
     }
@@ -41,8 +44,12 @@ class  UserServiceImpl implements UserService {
 
 
     @Override
-    public void updateUser(User user) throws SQLException {
+    public void updateUser(User user) throws Exception {
+    boolean exists = userRepository.existsById(user.getId());
+    if (exists)
         userRepository.save(user);
+    else
+        throw new Exception("Put an Id that Already Exists");
     }
 
 

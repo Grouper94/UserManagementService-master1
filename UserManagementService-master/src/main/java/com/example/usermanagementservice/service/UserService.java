@@ -14,7 +14,7 @@ public interface UserService {
     List<User> getUserByName(String name) throws SQLException;
 
     //update
-    void updateUser(User user) throws SQLException;
+    void updateUser(User user) throws Exception;
 
     //delete
     void deleteUser(int id) throws SQLException;
