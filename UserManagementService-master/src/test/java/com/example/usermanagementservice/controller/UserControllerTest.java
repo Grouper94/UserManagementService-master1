@@ -14,12 +14,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.webjars.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
 
@@ -33,25 +38,22 @@ import static org.springframework.web.servlet.function.RequestPredicates.content
 @WebMvcTest(UserController.class)
 class UserControllerTest {
     @Autowired
-    MockMvc mockMvc ;
+     private MockMvc mockMvc ;
 
     @Autowired
     ObjectMapper mapper ;
 
-    //@MockBean
-   // UserRepository userRepository ;
-
     @MockBean
     UserService userService ;
 
-    User user1 = new User (3,"Andreas","Pag",77);
+    User user1 = new User (3,"George","Pag",77);
     User user2 = new User (4,"George","Dap",55);
     User user3 = new User (5,"John","Voxer",23);
 
     List<User> users = new ArrayList<>(Arrays.asList(user1,user2,user3));
 
     @Test
-    public void getAll() throws Exception {
+    public void getAllTest() throws Exception {
 
 
         Mockito.when(userService.getAllUsers()).thenReturn(users);
@@ -66,10 +68,11 @@ class UserControllerTest {
                // .andExpect( jsonPath("$[2].name",is("John")));
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].name", Matchers.is("John")));
+
     }
 
     @Test
-    public void getUserById() throws Exception {
+    public void getUserByIdTest() throws Exception {
         Mockito.when(userService.getUser(user1.getId())).thenReturn(java.util.Optional.of(user1));
 
         Matchers Matchers = new Matchers();
@@ -79,17 +82,50 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", notNullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("Andreas")));
-
-
-
-
-
-
-
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("George")));
     }
 
+    @Test
+    public void getUserByNameTest() throws Exception {
+        Mockito.when(userService.getUserByName(user2.getName())).thenReturn((users));
+
+        Matchers Matchers = new Matchers();
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/crud/findUserByName/George")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is("George")));
+    }
+
+    @Test
+    public void deleteUserByIdTest() throws Exception {
+        Mockito.when(userService.getUser(user1.getId())).thenReturn(Optional.of(user1));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/crud/2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void AddUser() throws Exception {
+     User user  = new User (10,"Rick","Morty",43);
+
+        Mockito.when(userService.addUser(user)).thenReturn(user);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .post("/crud/AddUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(user));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
 
 
 

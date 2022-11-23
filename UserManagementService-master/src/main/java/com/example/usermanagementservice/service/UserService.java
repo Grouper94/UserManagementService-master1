@@ -1,12 +1,14 @@
 package com.example.usermanagementservice.service;
 import com.example.usermanagementservice.model.User;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface UserService {
     //create
-    void addUser(User user) throws SQLException ;
+    User addUser(User user) throws SQLException ;
 
     //read
     Optional<User> getUser(Integer id);

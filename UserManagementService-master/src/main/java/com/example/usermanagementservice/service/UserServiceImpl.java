@@ -3,7 +3,6 @@ package com.example.usermanagementservice.service;
 import com.example.usermanagementservice.repsitory.UserRepository;
 import com.example.usermanagementservice.model.User;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -21,9 +20,8 @@ class  UserServiceImpl implements UserService {
 //    }
 
     @Override
-    public void addUser(User user) throws SQLException {
-        userRepository.save(user);
-
+    public User addUser(User user) throws SQLException {
+       return  userRepository.save(user);
     }
 
     @Override
@@ -45,8 +43,9 @@ class  UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(User user) throws Exception {
-    boolean exists = userRepository.existsById(user.getId());
-    if (exists)
+
+    //boolean exists = userRepository.existsById(user.getId());
+    if (userRepository.findById(user.getId()).isPresent())
         userRepository.save(user);
     else
         throw new Exception("Put an Id that Already Exists");
