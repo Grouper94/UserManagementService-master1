@@ -1,10 +1,9 @@
 package com.example.usermanagementservice.controller;
 
 import com.example.usermanagementservice.model.User;
-import com.example.usermanagementservice.repsitory.UserRepository;
 import com.example.usermanagementservice.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matcher;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,27 +12,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.webjars.NotFoundException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
-
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.web.servlet.function.RequestPredicates.contentType;
+
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {

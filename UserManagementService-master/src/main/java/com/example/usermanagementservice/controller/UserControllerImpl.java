@@ -4,8 +4,7 @@ import com.example.usermanagementservice.model.User;
 import com.example.usermanagementservice.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
@@ -13,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +19,7 @@ import java.util.Optional;
 @RequestMapping("/crud")
 @AllArgsConstructor
 public class UserControllerImpl implements UserController{
-   // @Autowired
+    @Autowired
     private UserService userService ;
 
    //// public void setUserService(UserService userService) {
@@ -43,9 +39,8 @@ public class UserControllerImpl implements UserController{
     public ResponseEntity<List<User>> findAll() {
         List <User> users;
         try {
-            //return userService.getAllUsers();
             users = userService.getAllUsers();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
         if (users.isEmpty()) {
@@ -63,7 +58,7 @@ public class UserControllerImpl implements UserController{
             @ApiResponse(responseCode = "404", description = "User Not Found")
     })
 
-    public ResponseEntity <Optional<User>> findUser(@Parameter(description = "id of User to be searched",example="1") @PathVariable Integer id) throws SQLException {
+    public ResponseEntity <Optional<User>> findUser(@Parameter(description = "id of User to be searched",example="1") @PathVariable Integer id)  {
        Optional<User> user;
         try {
             user = userService.getUser(id);
@@ -93,7 +88,7 @@ public class UserControllerImpl implements UserController{
         try {
            users = userService.getUserByName(name);
         }
-        catch (SQLException e)  {
+        catch (Exception e)  {
 
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
@@ -120,7 +115,7 @@ public class UserControllerImpl implements UserController{
     public ResponseEntity<Void>addUser(User user) {
        try {
               userService.addUser(user);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
         return new ResponseEntity<>( HttpStatus.OK);
@@ -158,13 +153,10 @@ public class UserControllerImpl implements UserController{
 
 
     public ResponseEntity<Optional<String>> deleteUser(@PathVariable int id) {
-        Optional <String> msg = Optional.empty();
-        String ms = "Id not Found";
+        Optional <String> msg =Optional.of( "Id not Found");
         try {
             userService.deleteUser(id);
-        } catch (SQLException e) {
-            msg = Optional.ofNullable(ms); ;
-            System.out.println(msg);
+        } catch (Exception e) {
             return new ResponseEntity<>(msg,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>( HttpStatus.OK);

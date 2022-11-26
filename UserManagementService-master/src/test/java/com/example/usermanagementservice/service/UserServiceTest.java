@@ -8,28 +8,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.hamcrest.Matchers.*;
-
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Random;
 import java.util.Optional;
-
-//import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @InjectMocks
     private UserServiceImpl service;
-
     @Mock
     private UserRepository userRepository;
-
 
     @Test
     public void getUserById() {

@@ -3,15 +3,15 @@ package com.example.usermanagementservice.service;
 import com.example.usermanagementservice.repsitory.UserRepository;
 import com.example.usermanagementservice.model.User;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 class  UserServiceImpl implements UserService {
+    @Autowired
    private UserRepository userRepository ;
 
 //@Autowired
@@ -20,7 +20,7 @@ class  UserServiceImpl implements UserService {
 //    }
 
     @Override
-    public User addUser(User user) throws SQLException {
+    public User addUser(User user) throws Exception {
        return  userRepository.save(user);
     }
 
@@ -30,12 +30,12 @@ class  UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() throws SQLException {
+    public List<User> getAllUsers() throws Exception {
         return userRepository.findAll();
     }
 
     @Override
-    public List<User> getUserByName(String name) throws SQLException{
+    public List<User> getUserByName(String name) throws Exception{
       return userRepository.findByName(name);
 
     }
@@ -53,7 +53,7 @@ class  UserServiceImpl implements UserService {
 
 
     @Override
-    public void deleteUser(int id) throws SQLException {
+    public void deleteUser(int id) throws Exception {
         userRepository.deleteById(id);
     }
 

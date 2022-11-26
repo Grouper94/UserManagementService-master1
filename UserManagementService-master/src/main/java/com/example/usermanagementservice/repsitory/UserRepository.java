@@ -5,16 +5,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-//@Repository
+@Repository
 public interface UserRepository  extends JpaRepository<User,Integer> {
 
 
-    public Optional<User> findById(Integer id);
-    public List<User> findAll();
-    public List<User> findByName(String name);
-    public void deleteById(Integer id);
+     Optional<User> findById(Integer id);
+     List<User> findAll();
+     List<User> findByName(String name);
+     void deleteById(Integer id);
+    <S extends User> Iterable<S>  save(Iterable<S> user);
 
-    public User save(User user);
 
 
 
