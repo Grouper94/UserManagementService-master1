@@ -1,23 +1,37 @@
 package com.example.usermanagementservice.service;
-import com.example.usermanagementservice.model.User;
 
-import java.sql.SQLException;
+import com.example.usermanagementservice.model.User;
 import java.util.List;
 import java.util.Optional;
 
 
 public interface UserService {
-    //create
+
     User addUser(User user) throws Exception ;
-
-    //read
-    Optional<User> getUser(Integer id);
-    List<User> getAllUsers() throws Exception;
-    List<User> getUserByName(String name) throws Exception;
-
-    //update
     void updateUser(User user) throws Exception;
+    void addXRandomUsers(int X) throws Exception;
 
-    //delete
+
+
+    Optional<User> getUser(Integer id) throws Exception ;
+    List<User> getUserByName(String name) throws Exception;
+    List<User> getAllUsers() throws Exception;
+
+
+    void deleteAllUsers() throws Exception ;
     void deleteUser(int id) throws Exception;
 }
+
+//    User addUser(User user) throws Exception ;
+//    void updateUser(User user) throws Exception;
+//    void addXRandomUsers(int X) throws Exception;
+//
+//
+//
+//    Optional<User> getUser(Integer id) throws Exception ;
+//    List<User> getUserByName(String name) throws Exception;
+//    List<User> getAllUsers() throws Exception;
+//
+//
+//    void deleteAllUsers() throws Exception ;
+//    void deleteUser(int id) throws Exception;

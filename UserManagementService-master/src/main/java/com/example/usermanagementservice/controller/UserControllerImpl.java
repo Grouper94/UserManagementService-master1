@@ -121,42 +121,95 @@ public class UserControllerImpl implements UserController{
         return new ResponseEntity<>( HttpStatus.OK);
     }
     @Override
-    @PutMapping("/update")
+    @PutMapping("/Update")
     @Operation(tags = {"Note"},
     summary = "Update an EXISTING user's data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "User has been UPDatAded Successfully"),
             @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
-            @ApiResponse(responseCode = "404", description = "User has Not Been  uPDATED")
+            @ApiResponse(responseCode = "502", description = "Id Does Not exist")
     })
 
    // public ResponseEntity<Void> updateUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Put an existing ID",required = true,content = @Content(schema=@Schema(implementation = User.class)))
                        //        @Valid User user) {
-          public ResponseEntity<Void> updateUser(User user)
-         {
+    public ResponseEntity<Void> updateUser(User user)
+    {
         try {
             userService.updateUser(user);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
             return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("/AddUsers/{X}")
+    @Operation(
+            tags = {"Note"},
+            summary = "Creates  x  users ")
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Users has been Added Successfully"),
+            @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
+            @ApiResponse(responseCode = "404", description = "User has Not Been  Created")
+    })
+    //
+    // public ResponseEntity<Void>addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User to add",required = true,content = @Content(schema=@Schema(implementation = User.class))) @Valid User user) {
+    public ResponseEntity<Void>addXRandomUsers( @Parameter(description = "How many Users Do You Want To Create??",example="4") @PathVariable int X){
+
+        try {
+            userService.addXRandomUsers(X);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
         @Override
-        @DeleteMapping("/{id}")
+        @DeleteMapping("/Delete/{id}")
         @Operation(tags = {"Note"},
                 summary = "Deletes a user with the specific id", parameters = {@Parameter(name = "id", description = "id of User to be deleted", example = "1")})
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "User has been Deleted Successfully"),
-                @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
-                @ApiResponse(responseCode = "404", description = "User has Not Been  deleted")
+              //  @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
+              //  @ApiResponse(responseCode = "404", description = "User has Not Been  deleted"),
+                @ApiResponse(responseCode = "500", description = "Id Does Not Exist ")
         })
 
 
     public ResponseEntity<Optional<String>> deleteUser(@PathVariable int id) {
-        Optional <String> msg =Optional.of( "Id not Found");
+
+
         try {
             userService.deleteUser(id);
         } catch (Exception e) {
+            Optional <String> msg =Optional.of( "Id not Found");
+            return new ResponseEntity<>(msg,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+
+
+
+
+
+
+    @Override
+    @DeleteMapping("/Delete")
+    @Operation(tags = {"Note"},
+            summary = "Deletes All Users")
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users has been Deleted Successfully"),
+            //  @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
+              @ApiResponse(responseCode = "404", description = "Users has Not Been  deleted"),
+           // @ApiResponse(responseCode = "500", description = "Id Does Not Exist ")
+    })
+    public ResponseEntity<Optional<String>> deleteAllUsers() {
+
+        try {
+            userService.deleteAllUsers();
+        } catch (Exception e) {
+            Optional <String> msg =Optional.of( "Noooooo Waay");
             return new ResponseEntity<>(msg,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>( HttpStatus.OK);

@@ -22,7 +22,7 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Test
-    public void getUserById() {
+    public void getUserById() throws Exception {
         User actual = new User(2, "Boher", "Pappas", 54);
 
         when(userRepository.findById(actual.getId())).thenReturn(Optional.of(actual));
@@ -93,7 +93,7 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUser() {
+    void deleteUser() throws Exception {
         User actual = new User(1, "John", "Fek", 23);
 
         doNothing().when(userRepository).deleteById((actual).getId());
