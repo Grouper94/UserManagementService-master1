@@ -23,5 +23,4 @@ public interface UserController {
      ResponseEntity<Optional<String>> deleteAllUsers() throws Exception;
 
 
-
 }
