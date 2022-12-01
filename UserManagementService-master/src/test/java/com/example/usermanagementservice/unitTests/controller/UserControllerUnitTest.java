@@ -1,36 +1,30 @@
-package com.example.usermanagementservice.controller;
+package com.example.usermanagementservice.unitTests.controller;
 
+import com.example.usermanagementservice.controller.UserController;
+import com.example.usermanagementservice.controller.UserControllerImpl;
 import com.example.usermanagementservice.model.User;
 import com.example.usermanagementservice.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest(UserController.class)
-class UserControllerTest {
+class UserControllerUnitTest {
    // @InjectMocks
    @Autowired
 

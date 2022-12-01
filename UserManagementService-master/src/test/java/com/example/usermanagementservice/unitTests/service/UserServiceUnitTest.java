@@ -1,7 +1,8 @@
-package com.example.usermanagementservice.service;
+package com.example.usermanagementservice.unitTests.service;
 
 import com.example.usermanagementservice.model.User;
 import com.example.usermanagementservice.repsitory.UserRepository;
+import com.example.usermanagementservice.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceUnitTest {
     @InjectMocks
     private UserServiceImpl service;
     @Mock
@@ -95,9 +96,7 @@ class UserServiceTest {
     @Test
     void deleteUser() throws Exception {
         User actual = new User(1, "John", "Fek", 23);
-
         doNothing().when(userRepository).deleteById((actual).getId());
-
         assertAll(()->service.deleteUser(1));
 
     }
