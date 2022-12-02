@@ -21,10 +21,9 @@ class UserServiceIntegrationTest {
 
     @Test
     public void addUser_success() throws Exception {
-        User user = new User("First","Last",80);
-        User expected = service.addUser(user);
-        assertThat(user.getName()).isEqualTo("First");
-        assertThat(user.getSurname()).isEqualTo("Last");
+        User expected = service.addUser(new User("First","Last",80));
+        assertThat(expected.getName()).isEqualTo("First");
+        assertThat(expected.getSurname()).isEqualTo("Last");
     }
 
     @Test
@@ -63,8 +62,9 @@ class UserServiceIntegrationTest {
     public void deleteUserById_success() throws Exception {
         User user= service.addUser(new User("Vat","Tav",45));
         assertAll(()->service.deleteUser(user.getId()));
-
     }
+
+
 
 
 
