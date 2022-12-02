@@ -12,7 +12,7 @@ public interface UserService {
    public  void addXRandomUsers(int X) throws Exception;
 
 
-    Optional<User> getUser(Integer id) throws Exception ;
+    Optional<User> getUserById(Integer id) throws Exception ;
     List<User> getUserByName(String name) throws Exception;
     List<User> getAllUsers() throws Exception;
 
@@ -21,16 +21,3 @@ public interface UserService {
     void deleteUser(int id) throws Exception;
 }
 
-//    User addUser(User user) throws Exception ;
-//    void updateUser(User user) throws Exception;
-//    void addXRandomUsers(int X) throws Exception;
-//
-//
-//
-//    Optional<User> getUser(Integer id) throws Exception ;
-//    List<User> getUserByName(String name) throws Exception;
-//    List<User> getAllUsers() throws Exception;
-//
-//
-//    void deleteAllUsers() throws Exception ;
-//    void deleteUser(int id) throws Exception;

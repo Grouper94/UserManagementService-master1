@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,12 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserController.class)
 class UserControllerIntegrationTest {
     @InjectMocks
-   @Autowired
-
-   private UserControllerImpl userController;
+    @Autowired
+     private UserControllerImpl userController;
     @Autowired
      private MockMvc mockMvc ;
-
     @Autowired
     ObjectMapper mapper ;
 
@@ -51,65 +48,9 @@ class UserControllerIntegrationTest {
     List<User> users = new ArrayList<>(Arrays.asList(user1,user2,user3));
 
     @Test
-    public void returnAllUsers_success() throws Exception {
-        Mockito.when(userService.getAllUsers()).thenReturn((users));
-        Matchers Matchers = new Matchers();
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/crud/findAll")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name", Matchers.is("John")));
-    }
-
-    @Test
-    public void returnUserById_success() throws Exception {
-
-
-        Mockito.when(userService.getUser(user3.getId())).thenReturn(java.util.Optional.of(user3));
-
-        Matchers Matchers = new Matchers();
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/crud/findUserById/5")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("John")));
-    }
-
-    @Test
-    public void returnListOfUsersByName_success() throws Exception {
-        List<User> usersList = new ArrayList<>(Arrays.asList(user1,user2));
-
-           Mockito.when(userService.getUserByName(user2.getName())).thenReturn((usersList));
-
-        Matchers Matchers = new Matchers();
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/crud/findUserByName/George")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-               // .andExpect(MockMvcResultMatchers.jsonPath("$", notNullValue()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is("George")))
-         .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is("George")));
-    }
-
-
-    @Test
-    public void deleteUserById_success() throws Exception {
-            Mockito.when(userService.getUser(user1.getId())).thenReturn(Optional.of(user1));
-
-              mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/crud/Delete/3")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-
-    @Test
     public void addUser_success() throws Exception {
 
-            User user  = new User (10,"Rick","Morty",43);
+        User user  = new User (10,"Rick","Morty",43);
 
         Mockito.when(userService.addUser(user)).thenReturn(user);
 
@@ -138,8 +79,67 @@ class UserControllerIntegrationTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
     }
+
+    @Test
+    public void returnUserById_success() throws Exception {
+
+
+        Mockito.when(userService.getUserById(user3.getId())).thenReturn(java.util.Optional.of(user3));
+
+        Matchers Matchers = new Matchers();
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/crud/findUserById/5")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("John")));
+    }
+
+    @Test
+    public void returnListOfUsersByName_success() throws Exception {
+        List<User> usersList = new ArrayList<>(Arrays.asList(user1,user2));
+
+        Mockito.when(userService.getUserByName(user2.getName())).thenReturn((usersList));
+
+        Matchers Matchers = new Matchers();
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/crud/findUserByName/George")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                // .andExpect(MockMvcResultMatchers.jsonPath("$", notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is("George")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is("George")));
+    }
+
+    @Test
+    public void returnAllUsers_success() throws Exception {
+        Mockito.when(userService.getAllUsers()).thenReturn((users));
+        Matchers Matchers = new Matchers();
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/crud/findAll")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name", Matchers.is("John")));
+    }
+
+
+    @Test
+    public void deleteUserById_success() throws Exception {
+            Mockito.when(userService.getUserById(user1.getId())).thenReturn(Optional.of(user1));
+
+              mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/crud/Delete/3")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
+
+
+
 
 
 

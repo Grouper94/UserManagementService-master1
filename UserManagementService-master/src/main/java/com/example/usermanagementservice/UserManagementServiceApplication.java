@@ -71,7 +71,7 @@ private UserService userService;
     //  userService.deleteUser(2);
     //  userService.deleteUser(3);
     //   List<User> userList1 = userService.getAllUsers();
-    // List<User> userList2 = userService.getUser(1);
+    // List<User> userList2 = userService.getUserById(1);
         /*
         for(User u1 :userList1)
         {

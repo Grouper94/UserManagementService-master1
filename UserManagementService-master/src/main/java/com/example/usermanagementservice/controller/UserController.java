@@ -13,10 +13,9 @@ public interface UserController {
      ResponseEntity<Void> addXRandomUsers(int X) throws Exception;
 
 
-
-     ResponseEntity<List<User>> findAll()throws Exception;
-     ResponseEntity<Optional<User>> findUser(Integer id) throws Exception;
+     ResponseEntity<Optional<User>> findUserById(Integer id) throws Exception;
      ResponseEntity<List<User>> findUserByName(String name) throws Exception;
+     ResponseEntity<List<User>> findAll()throws Exception;
 
 
      ResponseEntity<Optional<String>> deleteUser(int id) throws Exception;
