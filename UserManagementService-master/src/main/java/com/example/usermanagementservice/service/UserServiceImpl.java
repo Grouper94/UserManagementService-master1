@@ -2,11 +2,8 @@ package com.example.usermanagementservice.service;
 
 import com.example.usermanagementservice.repsitory.UserRepository;
 import com.example.usermanagementservice.model.User;
-
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
