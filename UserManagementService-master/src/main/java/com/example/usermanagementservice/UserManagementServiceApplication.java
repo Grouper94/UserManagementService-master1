@@ -19,12 +19,6 @@ public class UserManagementServiceApplication implements CommandLineRunner {
 public static void main(String[] args) {SpringApplication.run(UserManagementServiceApplication.class, args);}
 
 private UserService userService;
-
-   // @Autowired
-   // public void setUserService(UserService userService) {
-       // this.userService = userService;
-   // }
-
     @Override
     public void run(String... args) throws Exception {
     }

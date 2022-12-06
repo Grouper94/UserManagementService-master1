@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/crud")
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class UserControllerImpl implements UserController{
             @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
             @ApiResponse(responseCode = "404", description = "User has Not Been  Created")
     })
-    public ResponseEntity<Void>addUser(User user) {
+    public ResponseEntity<Void>addUser( User user) {
         try {
             userService.addUser(user);
         } catch (Exception e) {
@@ -44,11 +45,11 @@ public class UserControllerImpl implements UserController{
     @Operation(tags = {"Note"},
             summary = "Update an EXISTING user's data")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "User has been UPDatAded Successfully"),
+            @ApiResponse(responseCode = "200",description = "User has been UPDatAdded Successfully"),
             @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
             @ApiResponse(responseCode = "502", description = "Id Does Not exist")
     })
-    public ResponseEntity<Void> updateUser(User user)
+    public ResponseEntity<Void> updateUser(@RequestBody  User user)
     {
         try {
             userService.updateUser(user);

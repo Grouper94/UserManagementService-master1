@@ -59,7 +59,6 @@ class UserControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(user));
-
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -75,7 +74,6 @@ class UserControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(user1));
-
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -108,7 +106,6 @@ class UserControllerIntegrationTest {
                         .get("/crud/findUserByName/George")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                // .andExpect(MockMvcResultMatchers.jsonPath("$", notNullValue()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.is("George")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.is("George")));
     }
@@ -124,8 +121,6 @@ class UserControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].name", Matchers.is("John")));
     }
-
-
     @Test
     public void deleteUserById_success() throws Exception {
             Mockito.when(userService.getUserById(user1.getId())).thenReturn(Optional.of(user1));

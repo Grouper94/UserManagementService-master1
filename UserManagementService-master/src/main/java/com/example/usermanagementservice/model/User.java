@@ -1,5 +1,9 @@
 package com.example.usermanagementservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +16,7 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema
 public class User {
     public User(String name, String surname, int age) {
         this.name = name;
@@ -21,6 +26,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Parameter(required = false,hidden = true)
+    //@Schema(hidden = true)
      private Integer id ;
 
     @Size(min= 0 ,max=100)
