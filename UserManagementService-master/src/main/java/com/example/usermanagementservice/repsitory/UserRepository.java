@@ -11,6 +11,7 @@ public interface UserRepository  extends JpaRepository<User,Integer> {
 
     <S extends User> Iterable<S>  save(Iterable<S> user) throws IllegalArgumentException  ;
 
+
     Optional<User> findById(Integer id) throws IllegalArgumentException;
     List<User> findAll() throws IllegalArgumentException;
     List<User> findByName(String name) throws IllegalArgumentException;

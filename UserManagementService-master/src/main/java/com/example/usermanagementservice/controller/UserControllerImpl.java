@@ -20,16 +20,7 @@ import java.util.Optional;
 public class UserControllerImpl implements UserController{
     private final UserService userService ;
 
-    @Override
     @PostMapping("/AddUser")
-    @Operation(
-            tags = {"Note"},
-            summary = "Creates  a user by giving user's attributes")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "User has been Added Successfully"),
-            @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
-            @ApiResponse(responseCode = "404", description = "User has Not Been  Created")
-    })
     public ResponseEntity<Void>addUser( User user) {
         try {
             userService.addUser(user);
