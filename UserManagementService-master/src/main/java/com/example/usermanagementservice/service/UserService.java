@@ -9,7 +9,7 @@ public interface UserService {
 
     User addUser(User user) throws Exception ;
     void updateUser(User user) throws Exception;
-   public  void addXRandomUsers(int X) throws Exception;
+     void addXRandomUsers(int X) throws Exception;
 
 
     Optional<User> getUserById(Integer id) throws Exception ;
