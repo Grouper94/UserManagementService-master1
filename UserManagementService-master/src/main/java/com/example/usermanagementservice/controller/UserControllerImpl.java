@@ -20,8 +20,11 @@ import java.util.Optional;
 public class UserControllerImpl implements UserController{
     private final UserService userService ;
 
+
+    @Override
     @PostMapping("/AddUser")
-    public ResponseEntity<Void>addUser(@RequestBody User user) {
+    public ResponseEntity<Void>addUser(@RequestParam String name ,@RequestParam String surname , @RequestParam int age) {
+        User user = new User(name,surname,age);
         try {
             userService.addUser(user);
         } catch (Exception e) {
@@ -33,13 +36,7 @@ public class UserControllerImpl implements UserController{
 
     @Override
     @PutMapping("/Update")
-    @Operation(tags = {"Note"},
-            summary = "Update an EXISTING user's data")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "User has been UPDatAdded Successfully"),
-            @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
-            @ApiResponse(responseCode = "502", description = "Id Does Not exist")
-    })
+
     public ResponseEntity<Void> updateUser(@RequestBody  User user)
     {
         try {
@@ -52,14 +49,7 @@ public class UserControllerImpl implements UserController{
 
     @Override
     @GetMapping("/findUserById/{id}")
-    @Operation(tags = {"Note"},
-            summary = "Returns the user with the specific id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Found the User"),
-            @ApiResponse (responseCode = "400",description = "Invalid id supplied"),
-            @ApiResponse(responseCode = "404", description = "User Not Found")
-    })
-    public ResponseEntity <Optional<User>> findUserById(@Parameter(description = "id of User to be searched",example="1") @PathVariable Integer id)  {
+    public ResponseEntity <Optional<User>> findUserById( @PathVariable Integer id)  {
         Optional<User> user;
         try {
             user = userService.getUserById(id);
@@ -75,15 +65,7 @@ public class UserControllerImpl implements UserController{
 
     @Override
     @GetMapping("/findUserByName/{name}")
-    @Operation(
-            tags = {"Note"},
-            summary = "Returns the user OR users with the specific name",
-            parameters = {@Parameter(name = "name",description = "name of User/s to be searched",example="George")})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Found the User"),
-            @ApiResponse (responseCode = "400",description = "Invalid name supplied"),
-            @ApiResponse(responseCode = "404", description = "User/s Not Found")
-    })
+
     public ResponseEntity<List<User>> findUserByName(@PathVariable String name) {
         List<User> users;    // = new ArrayList<>();
         try {
@@ -103,13 +85,7 @@ public class UserControllerImpl implements UserController{
 
     @Override
     @GetMapping("/findAll")
-    @Operation(tags = {"Note"},
-                summary = "Returns All The Users")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Found All The Users"),
-            @ApiResponse(responseCode = "400",description = "Error"),
-            @ApiResponse(responseCode = "404",description = "No Users Found")
-    })
+
     public ResponseEntity<List<User>> findAll() {
         List <User> users;
         try {
@@ -125,14 +101,7 @@ public class UserControllerImpl implements UserController{
 
     @Override
     @DeleteMapping("/Delete/{id}")
-    @Operation(tags = {"Note"},
-            summary = "Deletes a user with the specific id", parameters = {@Parameter(name = "id", description = "id of User to be deleted", example = "1")})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User has been Deleted Successfully"),
-            //  @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
-            //  @ApiResponse(responseCode = "404", description = "User has Not Been  deleted"),
-            @ApiResponse(responseCode = "500", description = "Id Does Not Exist ")
-    })
+
     public ResponseEntity<Optional<String>> deleteUser(@PathVariable int id) {
         try {
             userService.deleteUser(id);
@@ -143,27 +112,11 @@ public class UserControllerImpl implements UserController{
         return new ResponseEntity<>( HttpStatus.OK);
     }
 
-
-
-
-
-
-
-
     @Override
     @PostMapping("/AddUsers/{X}")
-    @Operation(
-            tags = {"Note"},
-            summary = "Creates  x  users ")
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "Users has been Added Successfully"),
-            @ApiResponse (responseCode = "400",description = "Invalid data supplied"),
-            @ApiResponse(responseCode = "404", description = "User has Not Been  Created")
-    })
-    //
-    // public ResponseEntity<Void>addUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User to add",required = true,content = @Content(schema=@Schema(implementation = User.class))) @Valid User user) {
-    public ResponseEntity<Void>addXRandomUsers( @Parameter(description = "How many Users Do You Want To Create??",example="4") @PathVariable int X){
+
+    public ResponseEntity<Void>addXRandomUsers( @PathVariable int X){
 
         try {
             userService.addXRandomUsers(X);
@@ -173,19 +126,9 @@ public class UserControllerImpl implements UserController{
         return new ResponseEntity<>( HttpStatus.OK);
     }
 
-
-
     @Override
     @DeleteMapping("/Delete")
-    @Operation(tags = {"Note"},
-            summary = "Deletes All Users")
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Users has been Deleted Successfully"),
-            //  @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
-              @ApiResponse(responseCode = "404", description = "Users has Not Been  deleted"),
-           // @ApiResponse(responseCode = "500", description = "Id Does Not Exist ")
-    })
     public ResponseEntity<Optional<String>> deleteAllUsers() {
 
         try {

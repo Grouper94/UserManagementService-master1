@@ -43,7 +43,7 @@ class UserControllerUnitTest {
     @Test
     public void addUser_thenReturnValidResponse() throws Exception {
         Mockito.when(userService.addUser(user1)).thenReturn(user1);
-        ResponseEntity<Void> expected = userController.addUser(user1) ;
+        ResponseEntity<Void> expected = userController.addUser("George","Pag",77) ;
         assertThat(expected.getStatusCodeValue()).isEqualTo(200);
         assertThat(expected.getBody()).isNull();
     }

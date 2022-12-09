@@ -69,18 +69,18 @@ class UserControllerIntegrationTest {
     }
     @Test
     public void addUser_success() throws Exception {
-        User usr = new User( "NewUser", "Created", 65);
+     //   User usr = new User( "NewUser", "Created", 65);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .post("/crud/AddUser")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(usr));
+                .param("name","NewUser")
+                .param("surname","Created")
+                .param("age","65");
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User actual = h2Repository.findByName("NewUser");
-        assertEquals(usr.getName(), actual.getName());
+        assertEquals("NewUser", actual.getName());
     }
 
 
