@@ -1,43 +1,25 @@
-package com.example.usermanagementservice.integrationTests.controller;
+package com.example.usermanagementservice.intergrationTest;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-import com.example.usermanagementservice.UserManagementServiceApplication;
-import com.example.usermanagementservice.controller.UserController;
-import com.example.usermanagementservice.controller.UserControllerImpl;
+import com.example.usermanagementservice.intergrationTest.TestH2Repository;
 import com.example.usermanagementservice.model.User;
-import com.example.usermanagementservice.repsitory.UserRepository;
-import com.example.usermanagementservice.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.ClassOrderer.OrderAnnotation;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 
 @ExtendWith(SpringExtension.class)
@@ -68,10 +50,9 @@ class UserControllerIntegrationTest {
        h2Repository.deleteAll();
     }
     @Test
-    public void addUser_success() throws Exception {
-     //   User usr = new User( "NewUser", "Created", 65);
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .post("/crud/AddUser")
+    public void  addUser_thenReturnValidResponse() throws Exception {
+
+        MockHttpServletRequestBuilder mockRequest = post("/crud/AddUser")
                 .param("name","NewUser")
                 .param("surname","Created")
                 .param("age","65");
@@ -85,7 +66,7 @@ class UserControllerIntegrationTest {
 
 
     @Test
-    public void updateUser_success() throws Exception {
+    public void updateUser_whenGivenIdExists_thenReturnValidResponse() throws Exception {
        User actual = h2Repository.save(user);
         actual.setName("Changed");
 
@@ -98,61 +79,55 @@ class UserControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.status().isOk());
         User usr = h2Repository.findByName("Changed");
-        assertEquals(actual.getName(), usr.getName());
-
+        Assertions.assertEquals(actual.getName(), usr.getName());
     }
 
 
     @Test
-    public void returnUserById_success() throws Exception {
+    public void  findUserById_whenUserExists_thenReturnValidResponseAndUser() throws Exception {
 
         Matchers Matchers = new Matchers();
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/crud/findUserById/3")
+                        .get("/crud/findUserById/{id}", user1.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(3)));
+                .andExpect(jsonPath("$.name", org.hamcrest.Matchers.is(user1.getName())))
+                .andExpect(jsonPath("$.surname", org.hamcrest.Matchers.is(user1.getSurname())))
+                .andExpect(jsonPath("$.age", org.hamcrest.Matchers.is(user1.getAge())));
     }
 
 
     @Test
-    public void returnListOfUsersByName_success() throws Exception {
-
-
+    public void findUsersByName_whenUserExists_thenReturnValidResponseAndListOfUsers() throws Exception {
         Matchers Matchers = new Matchers();
-
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/crud/findUserByName/Rick")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", org.hamcrest.Matchers.is("Rick")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", org.hamcrest.Matchers.is("Rick")))
-                .andExpect(MockMvcResultMatchers.jsonPath("$", org.hamcrest.Matchers.hasSize(2)));
-
+                .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Rick")))
+                .andExpect(jsonPath("$[1].name", org.hamcrest.Matchers.is("Rick")))
+                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(2)));
     }
 
 
     @Test
-    public void returnAllUsers_success() throws Exception {
-
+    public void findAll_whenUsersExists_thenReturnValidResponse() throws Exception {
         Matchers Matchers = new Matchers();
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/crud/findAll")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
-
+                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(3)));
     }
 
     @Test
-    public void deleteUserById_success() throws Exception {
-      // h2Repository.save()
+    public void deleteUserById_whenUserExists_thenReturnValidResponse() throws Exception {
         System.out.println(h2Repository.findAll());
-
         mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/crud/Delete/7")
+                        .delete("/crud/Delete/{id}",user1.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
 }

@@ -1,4 +1,4 @@
-package com.example.usermanagementservice.integrationTests.controller;
+package com.example.usermanagementservice.intergrationTest;
 
 import com.example.usermanagementservice.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

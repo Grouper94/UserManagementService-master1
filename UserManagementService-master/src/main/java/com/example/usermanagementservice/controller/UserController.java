@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public interface UserController {
      @Operation(
              tags = {"Note"},
              summary = "Creates  x  users ",
-           parameters =  @Parameter(description = "How many Users Do You Want To Create??",example="4"))
+           parameters =  @Parameter(name = "X",description = "How many Users Do You Want To Create??",example="4"))
 
      @ApiResponses(value = {
              @ApiResponse(responseCode = "200",description = "Users has been Added Successfully"),
@@ -49,7 +50,7 @@ public interface UserController {
 
      @Operation(tags = {"Note"},
              summary = "Returns the user with the specific id",
-            parameters = {@Parameter(description = "id of User to be searched",example="1")})
+              parameters = {@Parameter(name = "id",description = "id of User to be searched",example="1")})
 
      @ApiResponses(value = {
              @ApiResponse(responseCode = "200",description = "Found the User"),
@@ -79,11 +80,12 @@ public interface UserController {
      ResponseEntity<List<User>> findAll()throws Exception;
 
      @Operation(tags = {"Note"},
-             summary = "Deletes a user with the specific id", parameters = {@Parameter(name = "id", description = "id of User to be deleted", example = "1")})
+             summary = "Deletes a user with the specific id",
+             parameters = {@Parameter(name = "id", description = "id of User to be deleted", example = "1")})
      @ApiResponses(value = {
              @ApiResponse(responseCode = "200", description = "User has been Deleted Successfully"),
-             //  @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
-             //  @ApiResponse(responseCode = "404", description = "User has Not Been  deleted"),
+              @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
+             @ApiResponse(responseCode = "404", description = "User has Not Been  deleted"),
              @ApiResponse(responseCode = "500", description = "Id Does Not Exist ")
      })
      ResponseEntity<Optional<String>> deleteUser(int id) throws Exception;
@@ -92,9 +94,9 @@ public interface UserController {
              summary = "Deletes All Users")
      @ApiResponses(value = {
              @ApiResponse(responseCode = "200", description = "Users has been Deleted Successfully"),
-             //  @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
+             @ApiResponse(responseCode = "400", description = "Invalid data supplied"),
              @ApiResponse(responseCode = "404", description = "Users has Not Been  deleted"),
-             // @ApiResponse(responseCode = "500", description = "Id Does Not Exist ")
+             @ApiResponse(responseCode = "500", description = "Id Does Not Exist ")
      })
      ResponseEntity<Optional<String>> deleteAllUsers() throws Exception;
 

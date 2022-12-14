@@ -10,15 +10,13 @@ import java.util.*;
 
 @Service
 public class  UserServiceImpl implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    // UserServiceImpl(UserRepository userRepository) {
-    /// this.userRepository = userRepository;
-    //  }
-    public void setUserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+     UserServiceImpl(UserRepository userRepository) {
+     this.userRepository = userRepository;
+      }
+
 
     @Override
     public User addUser(User user) throws Exception {
