@@ -19,8 +19,11 @@ import javax.validation.constraints.Size;
 public class User {
 
     public User ( String name, String surname, int age ) {
+
         this.name = name;
+
         this.surname = surname;
+
         this.age = age;
     }
 

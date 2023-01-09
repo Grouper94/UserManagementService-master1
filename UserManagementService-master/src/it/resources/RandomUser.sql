@@ -1,0 +1,1 @@
+INSERT INTO userdb (firstname,surname,age) VALUES ('Bill','Billson',29);

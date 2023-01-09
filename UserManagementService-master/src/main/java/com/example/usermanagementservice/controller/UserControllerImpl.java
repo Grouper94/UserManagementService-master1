@@ -13,33 +13,33 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/crud")
 @AllArgsConstructor
-public class UserControllerImpl implements UserController{
+public class UserControllerImpl implements UserController {
     private final UserService userService ;
-
 
     @Override
     @PostMapping("/AddUser")
     public ResponseEntity<Void>addUser(@RequestParam String name ,@RequestParam String surname , @RequestParam int age) {
+
         User user = new User(name,surname,age);
+
         try {
             userService.addUser(user);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
+
         return new ResponseEntity<>( HttpStatus.OK);
     }
 
-
     @Override
     @PutMapping("/Update")
-
-    public ResponseEntity<Void> updateUser(@RequestBody  User user)
-    {
+    public ResponseEntity<Void> updateUser(@RequestBody  User user)  {
         try {
             userService.updateUser(user);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -63,7 +63,7 @@ public class UserControllerImpl implements UserController{
     @GetMapping("/findUserByName/{name}")
 
     public ResponseEntity<List<User>> findUserByName(@PathVariable String name) {
-        List<User> users;    // = new ArrayList<>();
+        List<User> users;
         try {
             users = userService.getUserByName(name);
         }
@@ -110,9 +110,7 @@ public class UserControllerImpl implements UserController{
 
     @Override
     @PostMapping("/AddUsers/{X}")
-
-
-    public ResponseEntity<Void>addXRandomUsers( @PathVariable int X){
+    public ResponseEntity<Void>addXRandomUsers( @PathVariable int X) {
 
         try {
             userService.addXRandomUsers(X);
@@ -125,7 +123,6 @@ public class UserControllerImpl implements UserController{
     @Override
     @DeleteMapping("/Delete")
     public ResponseEntity<Optional<String>> deleteAllUsers() {
-
         try {
             userService.deleteAllUsers();
         } catch (Exception e) {
@@ -135,6 +132,6 @@ public class UserControllerImpl implements UserController{
         return new ResponseEntity<>( HttpStatus.OK);
     }
 
-    }
+}
 
 
