@@ -2,7 +2,6 @@ package com.example.usermanagementservice.service;
 
 import com.example.usermanagementservice.repsitory.UserRepository;
 import com.example.usermanagementservice.model.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,12 +62,11 @@ public class  UserServiceImpl implements UserService {
     @Override
     public List<User> getUserByName(String name) throws Exception {
         return userRepository.findByName(name);
-
     }
 
 
     @Override
-    public void deleteUser(int id) throws Exception {
+    public void deleteUser(int id)  {
         userRepository.deleteById(id);
     }
     @Override
@@ -76,14 +74,16 @@ public class  UserServiceImpl implements UserService {
         userRepository.deleteAll();
     }
 
+//    @Override
+//   public Set<Order> getOrders() throws Exception {
+//       return  userRepository.findOrders() ;
+//    }
+
+
 }
 
 
-    //boolean exists = userRepository.existsById(user.getId());
-    //if (userRepository.findById(user.getId()).isPresent())
-        //userRepository.save(user);
-    //else
-        //throw new Exception("Put an Id that Already Exists");
+
 
 
 

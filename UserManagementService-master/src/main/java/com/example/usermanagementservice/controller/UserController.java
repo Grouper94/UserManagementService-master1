@@ -1,20 +1,16 @@
 package com.example.usermanagementservice.controller;
 
-
 import com.example.usermanagementservice.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
 import java.util.List;
 import java.util.Optional;
 
-public interface UserController {
 
+public interface UserController {
 
      @Operation(
              tags = {"Note"},
@@ -99,6 +95,5 @@ public interface UserController {
              @ApiResponse(responseCode = "500", description = "Id Does Not Exist ")
      })
      ResponseEntity<Optional<String>> deleteAllUsers() throws Exception;
-
 
 }

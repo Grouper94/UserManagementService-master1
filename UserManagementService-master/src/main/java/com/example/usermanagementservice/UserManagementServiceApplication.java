@@ -18,9 +18,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class UserManagementServiceApplication implements CommandLineRunner {
 public static void main(String[] args) {SpringApplication.run(UserManagementServiceApplication.class, args);}
 
-//private UserService userService;
+private UserService userService;
 
     @Override
     public void run(String... args) throws Exception {
+
     }
 }

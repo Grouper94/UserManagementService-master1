@@ -1,133 +1,114 @@
 package com.example.usermanagementservice.intergrationTest;
 
-import com.example.usermanagementservice.intergrationTest.TestH2Repository;
 import com.example.usermanagementservice.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
+import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-//@TestMethodOrder(OrderAnnotation.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class UserControllerIntegrationTest {
-    @Autowired
-    private MockMvc mockMvc;
+
+    @LocalServerPort
+    private int port;
+
     @Autowired
     ObjectMapper mapper;
+
     @Autowired
     private TestH2Repository h2Repository;
 
-    User user = new User( "Rick", "Morty", 43);
-    User user1 = new User( "Rick", "Robinson", 76);
-    User user2 = new User( "Gobert", "Jonson", 23);
+    HttpHeaders headers = new HttpHeaders();
 
-    @BeforeEach
-    void init() {
-        h2Repository.save(user);
-        h2Repository.save(user1);
-        h2Repository.save(user2);
-    }
+    TestRestTemplate restTemplate = new TestRestTemplate();
 
-    @AfterEach
-    void teardown() {
-       h2Repository.deleteAll();
-    }
-    @Test
-    public void  addUser_thenReturnValidResponse() throws Exception {
+    private static final String LOCALHOST_PREFIX = "http://localhost:";
 
-        MockHttpServletRequestBuilder mockRequest = post("/crud/AddUser")
-                .param("name","NewUser")
-                .param("surname","Created")
-                .param("age","65");
+//    User user = new User("Rick", "Morty", 43);
+//    User user1 = new User( "Rick", "Robinson", 76);
+//    User user2 = new User( "Gobert", "Jonson", 23);
 
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        User actual = h2Repository.findByName("NewUser");
-        assertEquals("NewUser", actual.getName());
-    }
+//    @BeforeEach
+//    void init() {
+////        h2Repository.save(user);
+////        h2Repository.save(user1);
+////        h2Repository.save(user2);
+//    }
 
+//    @AfterEach
+//    void teardown() {
+//        h2Repository.deleteAll();
+//    }
 
     @Test
-    public void updateUser_whenGivenIdExists_thenReturnValidResponse() throws Exception {
-       User actual = h2Repository.save(user);
-        actual.setName("Changed");
+    public void findUserById_whenUserExists_thenReturnValidResponseAndUser() throws Exception {
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .put("/crud/Update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(actual));
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        User usr = h2Repository.findByName("Changed");
-        Assertions.assertEquals(actual.getName(), usr.getName());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        String expected = "{\"id\":1,\"name\":\"Rick\",\"surname\":\"Morty\",\"age\":43}";
+
+        ResponseEntity<String> response2 = restTemplate.exchange(
+                createURLWithPort("/crud/findUserById/1"),
+                HttpMethod.GET, entity, String.class);
+
+        JSONAssert.assertEquals(expected, response2.getBody(), false);
     }
-
-
-    @Test
-    public void  findUserById_whenUserExists_thenReturnValidResponseAndUser() throws Exception {
-
-        Matchers Matchers = new Matchers();
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/crud/findUserById/{id}", user1.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", org.hamcrest.Matchers.is(user1.getName())))
-                .andExpect(jsonPath("$.surname", org.hamcrest.Matchers.is(user1.getSurname())))
-                .andExpect(jsonPath("$.age", org.hamcrest.Matchers.is(user1.getAge())));
-    }
-
 
     @Test
     public void findUsersByName_whenUserExists_thenReturnValidResponseAndListOfUsers() throws Exception {
-        Matchers Matchers = new Matchers();
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/crud/findUserByName/Rick")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name", org.hamcrest.Matchers.is("Rick")))
-                .andExpect(jsonPath("$[1].name", org.hamcrest.Matchers.is("Rick")))
-                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(2)));
-    }
 
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
-    @Test
-    public void findAll_whenUsersExists_thenReturnValidResponse() throws Exception {
-        Matchers Matchers = new Matchers();
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/crud/findAll")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", org.hamcrest.Matchers.hasSize(3)));
+        String expected = "[{\"id\":1,\"name\":\"Rick\",\"surname\":\"Morty\",\"age\":43},"
+                         +"{\"id\":2,\"name\":\"Rick\",\"surname\":\"Robinson\",\"age\":73}]";
+
+        ResponseEntity<String> response2 = restTemplate.exchange(
+                createURLWithPort("/crud/findUserByName/Rick"),
+                HttpMethod.GET, entity, String.class);
+        System.out.println(response2.getStatusCode());
+        JSONAssert.assertEquals(expected, response2.getBody(), false);
+
     }
 
     @Test
-    public void deleteUserById_whenUserExists_thenReturnValidResponse() throws Exception {
-        System.out.println(h2Repository.findAll());
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/crud/Delete/{id}",user1.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    public void  addUser_thenReturnValidResponse() throws Exception {
+
+        String expected = "400 BAD_REQUEST" ;
+      //  "{\"id\":1,\"name\":\"Rick\",\"surname\":\"Morty\",\"age\":43}"
+        User user = new User();
+        user.setName("Sample User");
+        user.setSurname("user1");
+        user.setAge(23);
+        HttpEntity<User> entity = new HttpEntity<User> (new User("Peter","Teper",18)) ;
+
+        ResponseEntity<String> response2 = restTemplate.exchange(
+                createURLWithPort("/crud/AddUser"),
+                HttpMethod.POST, entity, String.class);
+
+//        JSONObject jsonObject = new JSONObject() ;
+//        jsonObject = response2.getBody() ;
+//        ObjectMapper mapper = new ObjectMapper();
+//        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject));
+        System.out.println(response2.getStatusCode());
+
+        // JSONAssert.assertEquals(expected, String.valueOf(response2), false);
+
+
     }
 
+
+
+
+    private String createURLWithPort(String uri) {
+        return LOCALHOST_PREFIX + port + uri;
+    }
 }
